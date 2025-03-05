@@ -11,7 +11,7 @@ This repository belongs to [Farshad Khunjush, Associate Professor](https://fkhun
 
 ## Reporting Format
  
-- The report must be a PDF file, which will be uploaded to the given Google Form.
+- The report must be a PDF file, which will be uploaded to the given google form.
 - The report must cover all the objective items.
 - The system command outputs must be images, not text.
 - Try to reduce the PDF size by compressing images.
