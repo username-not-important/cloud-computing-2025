@@ -1,17 +1,32 @@
 from transformers import pipeline
 import time, datetime, os
+import csv
+
 from flask import Flask, request, jsonify
 
-sentiment_pipeline = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
+sentiment_pipeline = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english", device=-1)
 
 def log_metrics(input_text, start_time, end_time, prediction):
     timestamp = datetime.datetime.now().isoformat()
     latency_ms = (end_time - start_time) * 1000
-    log_file = os.environ.get('METRICS_LOG_FILE', 'inference_metrics.log')
+    log_file = os.environ.get('METRICS_LOG_FILE', 'system_inference_metrics.csv')
+    log_entry = {
+        'Inference Latency (ms)': f'{latency_ms:.2f}',
+        'Prediction': prediction,
+        'Input Text': input_text,
+        'Timestamp': timestamp,
 
-    log_entry = f"Timestamp: {timestamp}, Input Text: '{input_text}', Inference Latency (ms): {latency_ms:.2f}, Prediction: {prediction}"
-    with open(log_file, 'a') as f:
-        f.write(log_entry + '\n')
+    }
+
+    file_exists = os.path.isfile(log_file)
+
+    with open(log_file, 'a', newline='') as f:
+        csv_writer = csv.DictWriter(f, fieldnames=log_entry.keys())
+
+        if not file_exists:
+            csv_writer.writeheader()
+        csv_writer.writerow(log_entry)
+
     print(log_entry)
 
 app = Flask(__name__)
