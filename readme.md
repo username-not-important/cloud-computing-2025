@@ -1,5 +1,5 @@
 # Spring 2025, Cloud Computing Homework
-This repository belongs to [Farshad Khunjush, Associate Professor](https://fkhunjush.github.io/website/), Cloud Computing course and contains the homework assignments which offered at Shiraz University.
+This repository belongs to [Farshad Khunjush, Associate Professor](https://fkhunjush.github.io/website/), Cloud Computing course and contains the homework assignments which are offered at Shiraz University.
 
 ## Notes
 <mark>**PLEASE READ THE NOTES CAREFULLY.**</mark>
