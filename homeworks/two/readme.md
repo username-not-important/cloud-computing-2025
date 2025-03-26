@@ -2,7 +2,7 @@
 
 **MapReduce, Hadoop, and Spark Technologies for Cloud Computing in the Context of Federated Learning**
 
-Due date until <mark>1404-02-15</mark> at [this]() google form.
+Due date until <mark>1404-02-07</mark> at [this]() google form.
 
 ## Objective
 
@@ -10,7 +10,7 @@ Due date until <mark>1404-02-15</mark> at [this]() google form.
 
 ## Homework Assignment Outline
 
-### Part 1: Foundational Knowledge (10%)
+### Part 1: Foundational Knowledge & Environment Setup(20%)
 
 Define and explain the core concepts of:
 
@@ -18,6 +18,17 @@ Define and explain the core concepts of:
 - Hadoop, including its core modules (HDFS, YARN, MapReduce).
 - Spark, highlighting its key features like RDDs/DataFrames.
 - Describe the architectural relationship between Hadoop and MapReduce, detailing how Hadoop provides the necessary infrastructure for MapReduce jobs.
+
+Using docker & docker compose with knowledge coming from previous homework refer to:
+
+- [**docker-hadoop**](https://github.com/big-data-europe/docker-hadoop)
+- [Setting up Hadoop with Docker](https://medium.com/@guillermovc/setting-up-hadoop-with-docker-and-using-mapreduce-framework-c1cd125d4f7b),
+- [**docker-spark**](https://github.com/big-data-europe/docker-spark)
+- [Setting up a Spark standalone cluster](https://medium.com/@MarinAgli1/setting-up-a-spark-standalone-cluster-on-docker-in-layman-terms-8cbdc9fdd14b),
+- [PySpark + Docker Spark Cluster](https://medium.com/programmers-journey/deadsimple-pyspark-docker-spark-cluster-on-your-laptop-9f12e915ecf4),
+- or any available docker deployment on the internet.
+
+for running Hadoop and Spark. You also can locally install them on your system but it is time consuming and might cause lots of issues, do it with your own responsibility.
 
 **Deliverables:**
 
@@ -35,7 +46,7 @@ Compare and contrast Spark and Hadoop in terms of:
 
 Written Analysis
 
-### Part 3: Practical Application in Federated Learning (80%)
+### Part 3: Practical Application in Federated Learning (70%)
 
 #### Scenario
 
