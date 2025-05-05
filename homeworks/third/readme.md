@@ -2,7 +2,7 @@
 
 **Exploring Modern Cloud Paradigms: Kubernetes (K8S), Serverless and Ray**
 
-Due date until <mark>1404-03-??</mark> at [this]() google form.
+Due date until <mark>1404-03-20</mark> at [this](https://forms.gle/hCEU4nQ5e7Su4AWm6) google form.
 
 ## Objective
 
@@ -16,7 +16,7 @@ This assignment is divided into three main parts, building upon each other to de
 ## Homework Assignment Outline
 
 
-### 0.Prerequisites
+### 1.Prerequisites
 
 Before starting this assignment, ensure you have the following installed and configured on your local machine:
 
@@ -33,7 +33,7 @@ Before starting this assignment, ensure you have the following installed and con
 Verify installation of all prerequisites and note down the versions of key tools (docker --version, kubectl version, kind version and helm version). Include this information in your submission report.
 
 
-### 1.Kubernetes Fundamentals with kind
+### 2.Kubernetes Fundamentals with kind
 
 In this part, you will set up a local Kubernetes cluster using kind and perform basic operations.
 
@@ -45,25 +45,25 @@ In this part, you will set up a local Kubernetes cluster using kind and perform 
 #### Tasks:
 
 
-1.1.**Create a kind cluster**: Create a basic single-node kind cluster.
+2.1.**Create a kind cluster**: Create a basic single-node kind cluster.
 
-1.2.**Deploy a simple application**: Deploy a standard Nginx deployment and service using YAML manifests.
+2.2.**Deploy a simple application**: Deploy a standard Nginx deployment and service using YAML manifests.
 
-1.3.**Expose the application**: Expose the Nginx service using a NodePort or by configuring ingress. Explain your chosen method.
+2.3.**Expose the application**: Expose the Nginx service using a NodePort or by configuring ingress. Explain your chosen method.
 
-1.4.**Scale the application**: Scale the Nginx deployment to multiple replicas.
+2.4.**Scale the application**: Scale the Nginx deployment to multiple replicas.
 
-1.5.**Access the application**: Verify you can access the Nginx welcome page.
+2.5.**Access the application**: Verify you can access the Nginx welcome page.
 
-1.6.**Install Prometheus and Grafana using Helm**:
+2.6.**Install Prometheus and Grafana using Helm**:
 
-1.6.1.**Add the required Helm repositories** (e.g., prometheus-community).
+2.6.1.**Add the required Helm repositories** (e.g., prometheus-community).
 
-1.6.2.**Install the kube-prometheus-stack Helm chart, which includes Prometheus, Grafana**.
+2.6.2.**Install the kube-prometheus-stack Helm chart, which includes Prometheus, Grafana**.
 
-1.6.3.**Access the Prometheus and Grafana dashboards**(you may need to use port-forwarding).
+2.6.3.**Access the Prometheus and Grafana dashboards**(you may need to use port-forwarding).
 
-1.7.**Access the K8S cluster via lens**: Open the cluster configuration located in `~/.kube/config` in lens.  
+2.7.**Access the K8S cluster via lens**: Open the cluster configuration located in `~/.kube/config` in lens.  
 
 #### Deliverables:
 
@@ -92,7 +92,7 @@ In this part, you will set up a local Kubernetes cluster using kind and perform 
 
 - A brief written explanation of each step, the purpose of the YAML files, and how Helm was used to deploy Prometheus and Grafana.
 
-### 2.Serverless Deployment on K8S
+### 3.Serverless Deployment on K8S
 
 <div align="center">
   <img src="imgs/openfaas-kubernetes.png" />
@@ -104,15 +104,15 @@ You will integrate an open-source serverless platform into your kind cluster and
 #### Tasks:
 
 
-2.1.**Install the chosen Serverless Platform**: Follow the platform's documentation to install it onto your kind cluster. This typically involves applying several YAML manifests.
+3.1.**Install the chosen Serverless Platform**: Follow the platform's documentation to install it onto your kind cluster. This typically involves applying several YAML manifests.
 
-2.2.**Develop a simple function**: Create a small function (e.g., in Python) that takes a string as input and returns a modified string (e.g., reversed, uppercase).
+3.2.**Develop a simple function**: Create a small function (e.g., in Python) that takes a string as input and returns a modified string (e.g., reversed, uppercase).
 
-2.3.**Deploy the function**: Use the serverless platform's tools (e.g., faas-cli) to build and deploy your function to the kind cluster.
+3.3.**Deploy the function**: Use the serverless platform's tools (e.g., faas-cli) to build and deploy your function to the kind cluster.
 
-2.4.**Invoke the function**: Call your deployed function using the platform's gateway or CLI.
+3.4.**Invoke the function**: Call your deployed function using the platform's gateway or CLI.
 
-2.5.**Check lens**: Check cluster status in lens.
+3.5.**Check lens**: Check cluster status in lens.
 
 #### Deliverables:
 
@@ -134,7 +134,7 @@ You will integrate an open-source serverless platform into your kind cluster and
 
 A brief written explanation of the serverless platform you chose, why you chose it, and how your function works and was deployed.
 
-### 3.Ray on K8S
+### 4.Ray on K8S
 
 <div align="center">
   <img src="imgs/ray_on_kubernetes.png" />
@@ -145,15 +145,15 @@ This part focuses on deploying a Ray cluster on Kubernetes and running a simple 
 
 #### Tasks:
 
-3.1.**Deploy a Ray cluster**: [Use Ray's Kubernetes operator or official YAML](https://docs.ray.io/en/latest/cluster/kubernetes/index.html#kuberay-index) configurations to deploy a Ray head node and one or more worker nodes on your kind cluster.
+4.1.**Deploy a Ray cluster**: [Use Ray's Kubernetes operator or official YAML](https://docs.ray.io/en/latest/cluster/kubernetes/index.html#kuberay-index) configurations to deploy a Ray head node and one or more worker nodes on your kind cluster.
 
-3.2.**Run a simple Ray application**: Write a small Python script that uses Ray to perform a simple distributed task (e.g., parallel function execution, using Ray actors). Run this script from your local machine, connecting to the Ray cluster on kind ([use ray example (intermediate or advanced)](https://docs.ray.io/en/latest/ray-core/examples/overview.html)).
+4.2.**Run a simple Ray application**: Write a small Python script that uses Ray to perform a simple distributed task (e.g., parallel function execution, using Ray actors). Run this script from your local machine, connecting to the Ray cluster on kind ([use ray example (intermediate or advanced)](https://docs.ray.io/en/latest/ray-core/examples/overview.html)).
 
-3.3.**Access the Ray dashboard**: Expose the Ray cluster dashboard and access it and take a screenshot.
+4.3.**Access the Ray dashboard**: Expose the Ray cluster dashboard and access it and take a screenshot.
 
-3.4.**Check lens**: Check cluster status in lens.
+4.4.**Check lens**: Check cluster status in lens.
 
-3.5.**Comparison of Ray and Serverless**: Write a brief comparison of Ray and the serverless platform you used in Part 2. Discuss their core differences in architecture, execution model, state management, and typical use cases. Explain when you might choose one over the other for a specific application or workload.
+4.5.**Comparison of Ray and Serverless**: Write a brief comparison of Ray and the serverless platform you used in Part 2. Discuss their core differences in architecture, execution model, state management, and typical use cases. Explain when you might choose one over the other for a specific application or workload.
 
 #### Deliverables:
 
@@ -179,7 +179,7 @@ This part focuses on deploying a Ray cluster on Kubernetes and running a simple 
 
 A brief written explanation of what Ray is, how it was deployed on Kubernetes, and how your simple Ray application works.
 
-### 4.Advanced Tasks (For Master's and PhD Students)
+### 5.Advanced Tasks (For Master's and PhD Students)
 
 <mark>This section includes 50% of the total grade for master's and PhD students.</mark>
 
@@ -187,21 +187,21 @@ This section is mandatory for Master's and PhD students and optional for others.
 
 #### Tasks:
 
-4.1.**Research and Paper Review**: Find and read at least three recent research papers (published within the last 2-3 years) focusing on implementing or optimizing Federated Learning (FL) algorithms on serverless computing platforms. Summarize the key ideas, advantages, and challenges presented in each paper <mark>**specially clients data privacy**</mark>.
+5.1.**Research and Paper Review**: Find and read at least three recent research papers (published within the last 2-3 years) focusing on implementing or optimizing Federated Learning (FL) algorithms on serverless computing platforms. Summarize the key ideas, advantages, and challenges presented in each paper <mark>**specially clients data privacy**</mark>.
 
-4.2.**Approach Selection**: Choose one of the approaches described in the papers that you find most interesting or feasible to implement within the kind and serverless setup from Part 2. Justify your choice.
+5.2.**Approach Selection**: Choose one of the approaches described in the papers that you find most interesting or feasible to implement within the kind and serverless setup from Part 2 and 3. Justify your choice.
 
-4.3.**Implementation and Deployment**: Implement a simplified version of the chosen FL approach using the serverless platform deployed in Part 2. This might involve:
+5.3.**Implementation and Deployment**: Implement a simplified version of the chosen FL approach using the serverless platform deployed in Part 3. This might involve:
 
-4.3.1.Creating serverless functions for client-side model training updates.
+5.3.1.**Creating serverless functions for client-side model training updates**.
 
-4.3.2.Creating a serverless function or a separate service for the federated averaging/aggregation step.
+5.3.2.**Creating a serverless function or a separate service for the federated averaging/aggregation step**.
 
-4.3.3.Setting up a mechanism for clients to send updates to the server and receive the global model.
+5.3.3.**Setting up a mechanism for clients to send updates to the server and receive the global model**.
 
-4.3.4.Use a simple dataset (e.g., MNIST subset) and a small model for demonstration.
+5.3.4.**Use a simple dataset (e.g., MNIST subset) and a small model for demonstration**.
 
-4.4.**Demonstration and Results**: Run your implemented federated learning system on the kind cluster. Demonstrate its functionality and show results, such as:
+5.4.**Demonstration and Results**: Run your implemented federated learning system on the kind cluster. Demonstrate its functionality and show results, such as:
 
 - Output showing the training process (e.g., loss reduction over rounds).
 
