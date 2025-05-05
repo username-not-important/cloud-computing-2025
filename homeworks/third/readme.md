@@ -181,13 +181,13 @@ A brief written explanation of what Ray is, how it was deployed on Kubernetes, a
 
 ### 4.Advanced Tasks (For Master's and PhD Students)
 
-<mark>This section include 50% of the master's and PhD students total grade.</mark>
+<mark>This section includes 50% of the total grade for master's and PhD students.</mark>
 
 This section is mandatory for Master's and PhD students and optional for others. It delves into the research area of federated learning on serverless platforms.
 
 #### Tasks:
 
-4.1.**Research and Paper Review**: Find and read at least three recent research papers (published within the last 2-3 years) focusing on implementing or optimizing Federated Learning (FL) algorithms on serverless computing platforms. Summarize the key ideas, advantages, and challenges presented in each paper specially clients data privacy.
+4.1.**Research and Paper Review**: Find and read at least three recent research papers (published within the last 2-3 years) focusing on implementing or optimizing Federated Learning (FL) algorithms on serverless computing platforms. Summarize the key ideas, advantages, and challenges presented in each paper <mark>**specially clients data privacy**</mark>.
 
 4.2.**Approach Selection**: Choose one of the approaches described in the papers that you find most interesting or feasible to implement within the kind and serverless setup from Part 2. Justify your choice.
 
