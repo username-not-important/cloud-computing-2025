@@ -16,7 +16,7 @@ This assignment is divided into three main parts, building upon each other to de
 ## Homework Assignment Outline
 
 
-### 1.Prerequisites
+### 0.Prerequisites
 
 Before starting this assignment, ensure you have the following installed and configured on your local machine:
 
