@@ -28,7 +28,7 @@ Before starting this assignment, ensure you have the following installed and con
 - [Helm](https://helm.sh/docs/intro/install/): The package manager for Kubernetes.
 - Additional libraries for Federated Learning (for advanced section): (e.g., PyTorch, TensorFlow, Flower, FedML).
 
-**Derivatives:**
+#### Deliverables:
 
 Verify installation of all prerequisites and note down the versions of key tools (docker --version, kubectl version, kind version and helm version). Include this information in your submission report.
 
@@ -65,7 +65,7 @@ In this part, you will set up a local Kubernetes cluster using kind and perform 
 
 1.7.**Access the K8S cluster via lens**: Open the cluster configuration located in `~/.kube/config` in lens.  
 
-#### Derivatives:
+#### Deliverables:
 
 - YAML manifest for the kind cluster configuration.
 - YAML manifests for the Nginx deployment and service.
@@ -114,7 +114,7 @@ You will integrate an open-source serverless platform into your kind cluster and
 
 2.5.**Check lens**: Check cluster status in lens.
 
-#### Derivatives:
+#### Deliverables:
 
 - Link to the documentation or the specific commands/manifests used to install the serverless platform.
 
@@ -155,7 +155,7 @@ This part focuses on deploying a Ray cluster on Kubernetes and running a simple 
 
 3.5.**Comparison of Ray and Serverless**: Write a brief comparison of Ray and the serverless platform you used in Part 2. Discuss their core differences in architecture, execution model, state management, and typical use cases. Explain when you might choose one over the other for a specific application or workload.
 
-#### Derivatives:
+#### Deliverables:
 
 - You Ray and Serverless comparison report. 
 
@@ -209,7 +209,7 @@ This section is mandatory for Master's and PhD students and optional for others.
 
 - Any metrics you can collect regarding the performance or efficiency of the serverless FL implementation.
 
-#### Derivatives:
+#### Deliverables:
 
 - List of the three research papers read, including titles, authors, publication venues, and a brief summary of each.
 
