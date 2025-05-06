@@ -4,9 +4,12 @@
 
 Due date until <mark>1404-03-20</mark> at [this](https://forms.gle/hCEU4nQ5e7Su4AWm6) google form.
 
+
 ## Objective
 
 This homework assignment aims to provide hands-on experience with key cloud computing concepts: container orchestration with Kubernetes, the serverless paradigm, and distributed computing with Ray, all within a local Kubernetes environment simulated using kind.
+
+**Note**: <mark>Use the given URLs for guidance.</mark>
 
 
 ## Introduction
@@ -24,7 +27,7 @@ Before starting this assignment, ensure you have the following installed and con
 - [kubectl](https://pwittrock.github.io/docs/tasks/tools/install-kubectl/): The Kubernetes command-line tool,
 - [kind](https://kind.sigs.k8s.io): Kubernetes in Docker.
 - [Lens](https://k8slens.dev): Kubernetes IDE,
-- [faas-cli](https://github.com/openfaas/faas-cli),
+- [faas-cli](https://github.com/openfaas/faas-cli) (considering the choice),
 - [Helm](https://helm.sh/docs/intro/install/): The package manager for Kubernetes.
 - Additional libraries for Federated Learning (for advanced section): (e.g., PyTorch, TensorFlow, Flower, FedML).
 
@@ -38,8 +41,8 @@ Verify installation of all prerequisites and note down the versions of key tools
 In this part, you will set up a local Kubernetes cluster using kind and perform basic operations.
 
 <div align="center" >
-  <img src="imgs/kind_logo.png" />
-  <p>Source: https://kind.sigs.k8s.io</p>
+  <img src="imgs/Kubernetes_logo_without_workmark.svg.png" />
+  <p>Source: github.com/kubernetes</p>
 </div>
 
 #### Tasks:
@@ -242,7 +245,7 @@ Your submission should be a single compressed archive (e.g., .zip, .tar.gz) cont
 
     - A brief conclusion summarizing your experience.
 
-- **A folder containing the code and YAML files**: Organize this folder by part (e.g., part1/, part2/, part3/) and include all the YAML manifests and source code files you created or used.
+- **A folder containing the code and YAML files**: Organize this folder by part (e.g., part1/, part2/, part3/, etc) and include all the YAML manifests and source code files you created or used.
 
 
 Good luck with your assignment!
