@@ -47,8 +47,8 @@ The project is divided into **five** main phases, each assigned to specific stud
 
 ### Phase 5: Infrastructure & Security <mark>Groups 12 & 13</mark>
 
-- Configure and manage Ray clusters, leveraging auto-scaling and spot instances for cost efficiency.
-- Implement secure data access and IAM role management.
+- Configure and manage Ray clusters.
+- Implement secure data access and Attribute Base Access Control (ABAC) management in Ray.
 
 ## Technical Requirements
 
