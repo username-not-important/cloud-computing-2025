@@ -26,7 +26,7 @@ The project is divided into **five** main phases, each assigned to specific stud
 
 - Implement automated web scraping using Ray Actors for parallelization.
 - Perform data validation and cleaning to ensure high-quality input for model training.
-- Store and version datasets using Ray Datasets and cloud storage (e.g., AWS S3, GCS).
+- Store and version datasets using Ray Datasets and cloud storage (e.g., AWS S3 compatible open source storage, MinIO).
 
 ### Phase 2: Model Training <mark>Groups 4, 5 & 6</mark>
 
