@@ -78,6 +78,14 @@ The project is divided into **five** main phases, each assigned to specific stud
 - Quality of documentation and code readability
 - Collaboration and integration between groups
 
+## Notes:
+
+- Deployment Environment: Pure code file are not acceptable, the deployment must be dockerize and tested on Kubernetes platform.
+
+- Teams Collaboration: Teams must collaborate with each other, some parts required the other team results and team which are unwilling to collaborate will get negative point as mentioned in `Evaluation Criteria` section.
+
+- Using any other tools for automation such as `n8n` is also acceptable but it must not limit the development/ deployment process, in other words it must be robust.
+
 ## References
 
 - [MLOps: Continuous Delivery and Automation Pipelines in Machine Learning](https://ml-ops.org/)
