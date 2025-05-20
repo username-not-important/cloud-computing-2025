@@ -26,26 +26,66 @@ Users do not need to know anything about Ray, Docker, or the underlying infrastr
 
 ```mermaid
 flowchart TD
-    User[User] --> Django[Django GUI & User Auth]
-    Django --> MinIO[Data Source Selection & MinIO]
-    Django --> ModelSel[Model Selection & AI Mode]
-    Django --> RayMgmt[Ray Cluster Mgmt & API]
-    Django --> Rabbit[Training Orchestration RabbitMQ]
-    MinIO --> RayTrain[Hyperparam Mgmt & Ray Tune]
-    ModelSel --> RayTrain
-    RayMgmt --> RayTrain
-    RayTrain --> Rabbit
-    Rabbit --> Prom[Training Monitoring & Prometheus]
-    Rabbit --> MLflow[Model Eval & MLflow]
-    RayTrain --> MLflow
-    MLflow --> Docker[Model Packaging & Containerization]
-    Docker --> Serve[Model Serving & API Gateway]
-    Serve --> Drift[Model Perf Monitoring & Drift]
-    Drift --> Update[Continuous Model Updating]
-    Update --> MLflow
-    Drift --> n8n[n8n Workflow Automation]
-    Prom --> Grafana[Grafana Dashboards]
-    RayMgmt --> RayDash[Ray Dashboard]
+
+    %% UI & Data Module
+    subgraph UI_and_Data["UI &amp; Data"]
+        A1[User]
+        A2[Django GUI &amp; User Auth]
+        A3[Data Source Selection &amp; MinIO]
+        A4[Model Selection &amp; AI Mode]
+    end
+
+    %% Core Backend Module
+    subgraph Core_Backend["Core Backend"]
+        B1[Ray Cluster Mgmt &amp; API]
+        B2[Hyperparam Mgmt &amp; Ray Tune]
+        B3[Training Orchestration RabbitMQ]
+    end
+
+    %% Monitoring & Evaluation Module
+    subgraph Monitoring_Eval["Monitoring &amp; Evaluation"]
+        C1[Training Monitoring &amp; Prometheus]
+        C2[Model Eval &amp; MLflow]
+        C3[Grafana Dashboards]
+        C4[Ray Dashboard]
+    end
+
+    %% Packaging & Serving Module
+    subgraph Packaging_Serving["Packaging &amp; Serving"]
+        D1[Model Packaging &amp; Containerization]
+        D2[Model Serving &amp; API Gateway]
+    end
+
+    %% Production & Automation Module
+    subgraph Production_Auto["Production &amp; Automation"]
+        E1[Model Perf Monitoring &amp; Drift]
+        E2[Continuous Model Updating]
+        E3[n8n Workflow Automation]
+    end
+
+    %% Connections
+    A1 --> A2
+    A2 --> A3
+    A2 --> A4
+
+    A3 --> B2
+    A4 --> B2
+    A2 --> B1
+    B1 --> B2
+    B2 --> B3
+
+    B3 --> C1
+    B3 --> C2
+    C1 --> C3
+    B1 --> C4
+
+    C2 --> D1
+    D1 --> D2
+
+    D2 --> E1
+    E1 --> E2
+    E2 --> C2
+    E1 --> E3
 ```
 
 ---
@@ -190,7 +230,7 @@ gantt
 
 ### Team 13: n8n Workflow Automation
 
-- Set up n8n workflows for notifications (email, Slack, etc.)
+- Set up n8n workflows for notifications (email, telegram, etc.)
 - Automate retraining triggers and integration with external tools
 
 ---
