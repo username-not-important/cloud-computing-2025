@@ -92,25 +92,44 @@ flowchart TD
 
 ## Team Assignments and Timeline (Gantt Chart)
 
-**There are 13 teams, each with 2 people. Each team is assigned one major phase.**
 
+### Task Complexity Classification
 
-| Team | Assigned Phase | Description |
+| Phase | Task Name | Complexity |
 | :-- | :-- | :-- |
-| Team 1 | Django GUI \& User Auth | Build the Django web interface, user login/registration, and main navigation. |
-| Team 2 | Data Source Selection \& MinIO | Implement data upload/selection in the GUI, integrate MinIO for secure S3 storage. |
-| Team 3 | Model Selection \& AI Mode | Create GUI for model template selection and user model upload, map to backend configs. |
-| Team 4 | Ray Cluster Mgmt \& API | Develop backend logic to provision Ray clusters (with Docker), manage GPU/CPU allocation, ensure user isolation. |
-| Team 5 | Hyperparam Mgmt \& Ray Tune | Build hyperparameter input forms and integrate Ray Tune for automated search/tuning. |
-| Team 6 | Training Orchestration RabbitMQ | Set up RabbitMQ, implement job submission/queueing, develop backend workers for job execution and status tracking. |
-| Team 7 | Training Monitoring \& Prometheus | Instrument training scripts for Prometheus metrics, set up exporters, create Grafana dashboards for training. |
-| Team 8 | Model Eval \& MLflow | Integrate MLflow for experiment tracking, log all metrics, parameters, and artifacts, enable model versioning. |
-| Team 9 | Model Packaging \& Containerization | Automate Docker packaging of trained models, prepare Ray Serve deployment images. |
-| Team 10 | Model Serving \& API Gateway | Deploy model containers via Ray Serve, expose RESTful APIs, secure endpoints, document usage. |
-| Team 11 | Model Perf Monitoring \& Drift | Set up Prometheus monitoring for inference, implement drift detection, configure alerting. |
-| Team 12 | Continuous Model Updating | Automate retraining with new data, integrate with MLflow for versioning, implement rollback logic. |
-| Team 13 | n8n Workflow Automation | Configure n8n for notifications (email, Slack), automate retraining triggers, integrate with external tools. |
+| 1 | Django GUI \& User Auth | L |
+| 2 | Ray Cluster Mgmt \& API | H |
+| 3 | Data Source Selection \& MinIO | L |
+| 4 | Model Selection \& AI Mode | L |
+| 5 | Hyperparam Mgmt \& Ray Tune | H |
+| 6 | Training Orchestration (RabbitMQ) | H |
+| 7 | Training Monitoring \& Prometheus | L |
+| 8 | Model Eval \& MLflow | H |
+| 9 | Model Packaging \& Containerization | H |
+| 10 | Model Serving \& API Gateway | L |
+| 11 | Model Perf Monitoring \& Drift | H |
+| 12 | Continuous Model Updating | L |
+| 13 | n8n Workflow Automation | L |
 
+
+---
+
+### Fair Team Assignments
+
+| Team | Heavy Task (H) | Light Task (L) |
+| :-- | :-- | :-- |
+| Team 1 | Ray Cluster Mgmt \& API (2) | Django GUI \& User Auth (1) |
+| Team 2 | Hyperparam Mgmt \& Ray Tune (5) | Data Source Selection \& MinIO (3) |
+| Team 3 | Training Orchestration (RabbitMQ) (6) | Model Selection \& AI Mode (4) |
+| Team 4 | Model Eval \& MLflow (8) | Training Monitoring \& Prometheus (7) |
+| Team 5 | Model Packaging \& Containerization (9) | Model Serving \& API Gateway (10) |
+| Team 6 | Model Perf Monitoring \& Drift (11) | Continuous Model Updating (12) |
+| Team 7 | (None left) | n8n Workflow Automation (13) |
+
+**Explanation:**
+
+- There are 6 heavy and 7 light tasks, so Team 7 is assigned only a light task (n8n Workflow Automation), which is cross-cutting and suitable for a single team.
+- All other teams get one heavy and one light task for fairness.
 
 ```mermaid
 gantt
