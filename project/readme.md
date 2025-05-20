@@ -137,27 +137,27 @@ gantt
     dateFormat  YYYY-MM-DD
 
     section UI & Data
-    Django GUI & User Auth            :done,   t1, 2025-06-05, 3d
-    Data Source Selection & MinIO     :done,   t3, 2025-06-05, 3d
-    Model Selection & AI Mode         :active, t4, 2025-06-08, 3d
+    Django GUI & User Auth            :active,   t1, 2025-06-05, 2d
+    Data Source Selection & MinIO     :active,   t3, 2025-06-05, 2d
+    Model Selection & AI Mode         :active,   t4, 2025-06-06, 2d
 
     section Core Backend
-    Ray Cluster Mgmt & API            :active, t2, 2025-06-08, 3d
-    Hyperparam Mgmt & Ray Tune        :        t5, after t3, 3d
-    Training Orchestration RabbitMQ :        t6, after t4, 3d
+    Ray Cluster Mgmt & API            :crit,   t2, 2025-06-08, 4d
+    Hyperparam Mgmt & Ray Tune        :crit,   t5, after t3, 4d
+    Training Orchestration RabbitMQ   :crit,   t6, after t4, 4d
 
     section Monitoring & Evaluation
-    Training Monitoring & Prometheus  :        t7, after t4, 3d
-    Model Eval & MLflow               :        t8, after t7, 3d
+    Training Monitoring & Prometheus  :active,   t7, after t4, 4d
+    Model Eval & MLflow               :crit,   t8, after t7, 4d
 
     section Packaging & Serving
-    Model Packaging & Containerization:        t9, after t8, 3d
-    Model Serving & API Gateway       :        t10, after t9, 3d
+    Model Packaging & Containerization:crit,   t9, after t8, 4d
+    Model Serving & API Gateway       :active,   t10, after t9, 4d
 
     section Production & Automation
-    Model Perf Monitoring & Drift     :        t11, after t10, 3d
-    Continuous Model Updating         :        t12, after t11, 3d
-    n8n Workflow Automation           :        t13, after t12, 3d
+    Model Perf Monitoring & Drift     :crit,   t11, after t10, 4d
+    Continuous Model Updating         :active,   t12, after t11, 4d
+    n8n Workflow Automation           :active,   t13, after t12, 4d
 ```
 
 ---
