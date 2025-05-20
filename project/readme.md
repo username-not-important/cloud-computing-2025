@@ -20,6 +20,7 @@ This project delivers a web-based MLOps platform that empowers users—including
 
 All features are accessed through a **Django-powered web GUI**. The backend orchestrates all technical workflows, so users do not need to interact directly with Ray, Docker, or the underlying infrastructure.
 
+---
 
 ## System Architecture
 
@@ -41,50 +42,32 @@ The platform consists of the following core components:
 
 ### System Architecture Diagram
 
-The following diagram illustrates the high-level flow and integration of all core components:
-
 ```mermaid
 flowchart TD
-    User[User]
-    Django[1. Django GUI & User Auth]
-    MinIO[3. Data Source Selection & MinIO]
-    ModelSel[4. Model Selection & AI Mode]
-    RayMgmt[2. Ray Cluster Mgmt & API]
-    RayTrain[5. Hyperparam Mgmt & Ray Tune]
-    Rabbit[6. Training Orchestration RabbitMQ]
-    Prom[7. Training Monitoring & Prometheus]
-    MLflow[8. Model Eval & MLflow]
-    Docker[9. Model Packaging & Containerization]
-    Serve[10. Model Serving & API Gateway]
-    Drift[11. Model Perf Monitoring & Drift]
-    Update[12. Continuous Model Updating]
-    N8n[13. N8n Workflow Automation]
-    Grafana[Grafana Dashboards]
-    RayDash[Ray Dashboard]
-
-    User --> Django
-    Django --> MinIO
-    Django --> ModelSel
-    Django --> RayMgmt
-    Django --> Rabbit
-    MinIO --> RayTrain
+    User[User] --> Django[Django GUI & User Auth]
+    Django --> MinIO[Data Source Selection & MinIO]
+    Django --> ModelSel[Model Selection & AI Mode]
+    Django --> RayMgmt[Ray Cluster Mgmt & API]
+    Django --> Rabbit[Training Orchestration RabbitMQ]
+    MinIO --> RayTrain[Hyperparam Mgmt & Ray Tune]
     ModelSel --> RayTrain
     RayMgmt --> RayTrain
     RayTrain --> Rabbit
-    Rabbit --> Prom
-    Rabbit --> MLflow
+    Rabbit --> Prom[Training Monitoring & Prometheus]
+    Rabbit --> MLflow[Model Eval & MLflow]
     RayTrain --> MLflow
-    MLflow --> Docker
-    Docker --> Serve
-    Serve --> Drift
-    Drift --> Update
+    MLflow --> Docker[Model Packaging & Containerization]
+    Docker --> Serve[Model Serving & API Gateway]
+    Serve --> Drift[Model Perf Monitoring & Drift]
+    Drift --> Update[Continuous Model Updating]
     Update --> MLflow
-    Drift --> N8n
-    Prom --> Grafana
-    RayMgmt --> RayDash
+    Drift --> N8n[N8n Workflow Automation]
+    Prom --> Grafana[Grafana Dashboards]
+    RayMgmt --> RayDash[Ray Dashboard]
 ```
 
 
+---
 
 ## Workflow: User Journey
 
@@ -99,31 +82,12 @@ flowchart TD
 9. **Model performance monitoring** (Prometheus, Grafana).
 10. **Data drift detection and retraining automation** (N8n, MLflow versioning).
 
+---
 
 ## Team Assignments
 
-To ensure fairness and efficiency, each of the 13 teams is assigned one heavy (complex) and one light (simpler) phase.
-This guarantees balanced workloads and parallel progress.
+Each of the 13 teams is assigned one heavy (complex) and one light (simpler) phase for balanced workloads and parallel progress.
 
-### Phase Complexity
-
-| Phase | Description | Complexity |
-| :-- | :-- | :-- |
-| 1 | Django GUI \& User Authentication | L |
-| 2 | Ray Cluster Management \& System API Integration | H |
-| 3 | Data Source Selection \& MinIO Integration | L |
-| 4 | Model Selection \& AI Mode Configuration | L |
-| 5 | Hyperparameter Management \& Ray Tune Integration | H |
-| 6 | Training Orchestration with RabbitMQ | H |
-| 7 | Training Monitoring \& Prometheus Integration | L |
-| 8 | Model Evaluation \& MLflow Integration | H |
-| 9 | Model Packaging \& Containerization | H |
-| 10 | Model Serving \& API Gateway | L |
-| 11 | Model Performance Monitoring \& Drift Detection | H |
-| 12 | Continuous Model Updating \& Version Management | L |
-| 13 | N8n Workflow Automation \& Notification Integration | L |
-
-### Team-to-Phase Assignment
 
 | Team | Heavy Phase (H) | Light Phase (L) |
 | :-- | :-- | :-- |
@@ -237,55 +201,10 @@ This guarantees balanced workloads and parallel progress.
 
 ## Project Timeline and Dependencies
 
-The following diagrams clarify the **order of work, parallelism, and dependencies** between phases and teams.
+Below are diagrams showing phase order, parallelism, and dependencies.
+All diagrams use only basic Mermaid `flowchart TD` syntax for maximum compatibility.
 
-### Gantt Chart (Phase Timeline Representation)
-
-This flowchart shows which phases can be worked on in parallel and how they progress.
-
-```mermaid
-flowchart TD
-    subgraph Light_Phases
-        L1[1. Django GUI & User Auth]
-        L2[3. Data Source Selection & MinIO]
-        L3[4. Model Selection & AI Mode]
-        L4[7. Training Monitoring & Prometheus]
-        L5[10. Model Serving & API Gateway]
-        L6[12. Continuous Model Updating]
-        L7[13. N8n Workflow Automation]
-    end
-
-    subgraph Heavy_Phases
-        H1[2. Ray Cluster Mgmt & API]
-        H2[5. Hyperparam Mgmt & Ray Tune]
-        H3[6. Training Orchestration RabbitMQ]
-        H4[8. Model Eval & MLflow]
-        H5[9. Model Packaging & Containerization]
-        H6[11. Model Perf Monitoring & Drift]
-    end
-
-    %% Phase dependencies
-    L1 --> H1
-    L2 --> H2
-    L3 --> H3
-    L4 --> H4
-    L5 --> H5
-    L6 --> H6
-    L7 --> H6
-
-    %% Parallel work
-    H1 & L1 --> H2 & L2
-    H2 & L2 --> H3 & L3
-    H3 & L3 --> H4 & L4
-    H4 & L4 --> H5 & L5
-    H5 & L5 --> H6 & L6
-    H6 & L6 --> L7
-```
-
-
-### Dependency Diagram (Phase Handoffs)
-
-This diagram clarifies which phases depend on the completion of others, ensuring teams know their handoff points.
+### Gantt Chart (Timeline Representation)
 
 ```mermaid
 flowchart TD
@@ -296,14 +215,21 @@ flowchart TD
     L5[10. Model Serving & API Gateway] --> H5[9. Model Packaging & Containerization]
     L6[12. Continuous Model Updating] --> H6[11. Model Perf Monitoring & Drift]
     L7[13. N8n Workflow Automation] --> H6
+```
 
-    %% Show overall flow
-    H1 --> H2
-    H2 --> H3
-    H3 --> H4
-    H4 --> H5
-    H5 --> H6
-    H6 --> L6
+
+### Dependency Diagram (Phase Handoffs)
+
+```mermaid
+flowchart TD
+    L1[1. Django GUI & User Auth] --> H1[2. Ray Cluster Mgmt & API]
+    H1 --> H2[5. Hyperparam Mgmt & Ray Tune]
+    H2 --> H3[6. Training Orchestration RabbitMQ]
+    H3 --> H4[8. Model Eval & MLflow]
+    H4 --> H5[9. Model Packaging & Containerization]
+    H5 --> H6[11. Model Perf Monitoring & Drift]
+    H6 --> L6[12. Continuous Model Updating]
+    L7[13. N8n Workflow Automation] --> H6
 ```
 
 
