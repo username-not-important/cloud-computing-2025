@@ -1,46 +1,28 @@
 # Project: Automated MLOps Platform with Ray
 
-## 1. Project Overview
-
 # Automated MLOps Platform with Ray
 
-## Overview
+## Project Application: What This Platform Delivers
 
-This project delivers a web-based MLOps platform that empowers users—including non-experts—to:
+This platform is a **web-based MLOps solution** that allows users to:
 
-- Upload or select datasets from MinIO (S3-compatible storage)
-- Choose or define machine learning models (e.g., CNN for MNIST)
-- Set or auto-tune hyperparameters
-- Launch distributed training jobs on Ray clusters (with GPU/CPU support)
-- Monitor training progress and resource usage in real time
-- Track experiments and models with MLflow
-- Package, version, and serve trained models via APIs
-- Monitor models in production for performance and data drift
-- Trigger retraining and manage model versions with full history and rollback
+- **Upload or select datasets** from MinIO (S3-compatible storage)
+- **Choose or upload a machine learning model** (e.g., CNN for MNIST, or user’s own PyTorch/Keras code)
+- **Set or auto-tune hyperparameters** (e.g., learning rate, batch size, optimizer)
+- **Launch distributed training jobs** on Ray clusters (with GPU/CPU support, managed by Docker)
+- **Monitor training progress and system resource usage** in real time (via Prometheus and Grafana)
+- **Track all experiments and models** (hyperparameters, metrics, artifacts, and versioning) with MLflow
+- **Package and serve trained models** as APIs (using Ray Serve, Docker, and REST endpoints)
+- **Monitor model performance and detect data drift** in production (Prometheus, custom drift detection)
+- **Trigger automatic retraining and model updates** when performance degrades or drift is detected (N8n workflows)
+- **Manage model versions and rollback** to previous states as needed
 
-All features are accessed through a **Django-powered web GUI**. The backend orchestrates all technical workflows, so users do not need to interact directly with Ray, Docker, or the underlying infrastructure.
+**All of this is accessible through a simple, secure Django web interface.**
+Users do not need to know anything about Ray, Docker, or the underlying infrastructure.
 
 ---
 
-## System Architecture
-
-The platform consists of the following core components:
-
-
-| Component | Role |
-| :-- | :-- |
-| **Django** | Provides the main web GUI and orchestrates workflows. Handles user authentication, project management, and triggers backend processes (e.g., launching training jobs, monitoring, serving models). |
-| **Ray** | Executes distributed training, hyperparameter tuning (Ray Tune), and model serving (Ray Serve). Each user/job gets a dedicated Ray cluster, provisioned via Docker with GPU/CPU support as needed. |
-| **MinIO** | S3-compatible object storage for datasets, model artifacts, and logs. Users upload/select data here; Ray jobs read/write directly to MinIO. |
-| **RabbitMQ** | Decouples job submission from execution. Django submits jobs to RabbitMQ; backend workers listen for jobs and launch Ray clusters. Enables asynchronous, scalable processing. |
-| **MLflow** | Tracks experiments, logs hyperparameters, metrics, and artifacts. Provides a searchable model registry with versioning and lineage. |
-| **Docker** | Containerizes Ray clusters and model serving APIs, ensuring reproducible, isolated environments with GPU/CPU compatibility. |
-| **Prometheus** | Collects metrics (training loss, accuracy, resource usage, inference latency) from Ray clusters and serving APIs. |
-| **Grafana** | Visualizes metrics from Prometheus. Provides dashboards for users and admins to monitor training and serving in real time. |
-| **Ray Dashboard** | Native Ray UI for monitoring clusters, jobs, and resources. Useful for advanced users and debugging. |
-| **N8n** | Workflow automation for notifications (e.g., drift alerts), retraining triggers, and integration with external tools (email, Slack, ticketing). |
-
-### System Architecture Diagram
+## System Architecture Diagram
 
 ```mermaid
 flowchart TD
@@ -48,7 +30,7 @@ flowchart TD
     Django --> MinIO[Data Source Selection & MinIO]
     Django --> ModelSel[Model Selection & AI Mode]
     Django --> RayMgmt[Ray Cluster Mgmt & API]
-    Django --> Rabbit[Training Orchestration RabbitMQ]
+    Django --> Rabbit[Training Orchestration (RabbitMQ)]
     MinIO --> RayTrain[Hyperparam Mgmt & Ray Tune]
     ModelSel --> RayTrain
     RayMgmt --> RayTrain
@@ -66,47 +48,64 @@ flowchart TD
     RayMgmt --> RayDash[Ray Dashboard]
 ```
 
-
 ---
 
-## Workflow: User Journey
+## Team Assignments and Timeline (Gantt Chart)
 
-1. **User logs in via Django GUI.**
-2. **User creates/selects a project and dataset** (from MinIO or uploads new data).
-3. **User selects a model architecture** (template or custom).
-4. **User sets or auto-tunes hyperparameters** (manual or via Ray Tune).
-5. **Job submission and Ray cluster provisioning** (Django → RabbitMQ → Ray cluster via Docker).
-6. **Distributed training and real-time monitoring** (metrics to Prometheus, dashboards in Grafana).
-7. **Experiment tracking and model registration** (MLflow).
-8. **Model packaging and API deployment** (Docker container, Ray Serve).
-9. **Model performance monitoring** (Prometheus, Grafana).
-10. **Data drift detection and retraining automation** (N8n, MLflow versioning).
-
----
-
-## Team Assignments
-
-Each of the 13 teams is assigned one heavy (complex) and one light (simpler) phase for balanced workloads and parallel progress.
+**There are 13 teams, each with 2 people. Each team is assigned one major phase.**
 
 
-| Team | Heavy Phase (H) | Light Phase (L) |
+| Team | Assigned Phase | Description |
 | :-- | :-- | :-- |
-| Team 1 | 2. Ray Cluster Management \& System API Integration | 1. Django GUI \& User Authentication |
-| Team 2 | 5. Hyperparameter Management \& Ray Tune Integration | 3. Data Source Selection \& MinIO Integration |
-| Team 3 | 6. Training Orchestration with RabbitMQ | 4. Model Selection \& AI Mode Configuration |
-| Team 4 | 8. Model Evaluation \& MLflow Integration | 7. Training Monitoring \& Prometheus Integration |
-| Team 5 | 9. Model Packaging \& Containerization | 10. Model Serving \& API Gateway |
-| Team 6 | 11. Model Performance Monitoring \& Drift Detection | 12. Continuous Model Updating \& Version Management |
-| Team 7 | — | 13. N8n Workflow Automation \& Notification Integration |
+| Team 1 | Django GUI \& User Auth | Build the Django web interface, user login/registration, and main navigation. |
+| Team 2 | Data Source Selection \& MinIO | Implement data upload/selection in the GUI, integrate MinIO for secure S3 storage. |
+| Team 3 | Model Selection \& AI Mode | Create GUI for model template selection and user model upload, map to backend configs. |
+| Team 4 | Ray Cluster Mgmt \& API | Develop backend logic to provision Ray clusters (with Docker), manage GPU/CPU allocation, ensure user isolation. |
+| Team 5 | Hyperparam Mgmt \& Ray Tune | Build hyperparameter input forms and integrate Ray Tune for automated search/tuning. |
+| Team 6 | Training Orchestration (RabbitMQ) | Set up RabbitMQ, implement job submission/queueing, develop backend workers for job execution and status tracking. |
+| Team 7 | Training Monitoring \& Prometheus | Instrument training scripts for Prometheus metrics, set up exporters, create Grafana dashboards for training. |
+| Team 8 | Model Eval \& MLflow | Integrate MLflow for experiment tracking, log all metrics, parameters, and artifacts, enable model versioning. |
+| Team 9 | Model Packaging \& Containerization | Automate Docker packaging of trained models, prepare Ray Serve deployment images. |
+| Team 10 | Model Serving \& API Gateway | Deploy model containers via Ray Serve, expose RESTful APIs, secure endpoints, document usage. |
+| Team 11 | Model Perf Monitoring \& Drift | Set up Prometheus monitoring for inference, implement drift detection, configure alerting. |
+| Team 12 | Continuous Model Updating | Automate retraining with new data, integrate with MLflow for versioning, implement rollback logic. |
+| Team 13 | N8n Workflow Automation | Configure N8n for notifications (email, Slack), automate retraining triggers, integrate with external tools. |
 
+
+```mermaid
+gantt
+    title MLOps Platform Project Timeline
+    dateFormat  YYYY-MM-DD
+
+    section UI & Data
+    Django GUI & User Auth            :done,   t1, 2025-06-05, 3d
+    Data Source Selection & MinIO     :done,   t3, 2025-06-05, 3d
+    Model Selection & AI Mode         :active, t4, 2025-06-08, 3d
+
+    section Core Backend
+    Ray Cluster Mgmt & API            :active, t2, 2025-06-08, 3d
+    Hyperparam Mgmt & Ray Tune        :        t5, after t3, 3d
+    Training Orchestration (RabbitMQ) :        t6, after t4, 3d
+
+    section Monitoring & Evaluation
+    Training Monitoring & Prometheus  :        t7, after t4, 3d
+    Model Eval & MLflow               :        t8, after t7, 3d
+
+    section Packaging & Serving
+    Model Packaging & Containerization:        t9, after t8, 3d
+    Model Serving & API Gateway       :        t10, after t9, 3d
+
+    section Production & Automation
+    Model Perf Monitoring & Drift     :        t11, after t10, 3d
+    Continuous Model Updating         :        t12, after t11, 3d
+    N8n Workflow Automation           :        t13, after t12, 3d
+```
 
 ---
 
-## Phase Details
+## Detailed Phase Responsibilities
 
-> Each phase is described below with its main tasks.
-
-### 1. Django GUI \& User Authentication (L)
+### Team 1: Django GUI \& User Auth
 
 - Django project setup
 - User registration/login/password reset
@@ -114,138 +113,100 @@ Each of the 13 teams is assigned one heavy (complex) and one light (simpler) pha
 - Project and dataset selection pages
 
 
-### 2. Ray Cluster Management \& System API Integration (H)
+### Team 2: Data Source Selection \& MinIO
 
-- Backend logic to launch Ray clusters via system API
-- Docker orchestration for Ray clusters
+- GUI for dataset selection/upload
+- Integration with MinIO S3 APIs
+- Secure credential management and validation
+
+
+### Team 3: Model Selection \& AI Mode
+
+- GUI for model template selection and custom model upload
+- Backend mapping of user choices to Ray job configs
+
+
+### Team 4: Ray Cluster Mgmt \& API
+
+- Backend logic to launch Ray clusters via Docker/system API
 - GPU/CPU resource detection and allocation
 - User isolation for Ray clusters
 
 
-### 3. Data Source Selection \& MinIO Integration (L)
+### Team 5: Hyperparam Mgmt \& Ray Tune
 
-- Django forms for data selection/upload
-- Integrate MinIO S3 APIs
-- Credential management and validation
-
-
-### 4. Model Selection \& AI Mode Configuration (L)
-
-- GUI for model template selection
-- Template management and mapping to Ray jobs
-- Allow custom model uploads
-
-
-### 5. Hyperparameter Management \& Ray Tune Integration (H)
-
-- Forms for manual hyperparameter entry
-- Integrate Ray Tune for auto-tuning
+- Forms for manual hyperparameter input
+- Ray Tune integration for auto-tuning
 - Store configurations for reproducibility
 
 
-### 6. Training Orchestration with RabbitMQ (H)
+### Team 6: Training Orchestration (RabbitMQ)
 
 - Integrate RabbitMQ for job queueing
 - Develop worker logic for job execution
 - Job status updates and error handling
 
 
-### 7. Training Monitoring \& Prometheus Integration (L)
+### Team 7: Training Monitoring \& Prometheus
 
 - Instrument training scripts for Prometheus metrics
 - Set up Prometheus exporters
 - Create Grafana dashboards
 
 
-### 8. Model Evaluation \& MLflow Integration (H)
+### Team 8: Model Eval \& MLflow
 
 - Integrate MLflow for experiment tracking
 - Log model parameters, metrics, artifacts
 - Model versioning and lineage tracking
 
 
-### 9. Model Packaging \& Containerization (H)
+### Team 9: Model Packaging \& Containerization
 
-- Automate model packaging in Docker containers
-- Build APIs for model inference (Ray Serve)
-- Store container images in registry
+- Automate Docker packaging for trained models
+- Build Ray Serve deployment images
 
 
-### 10. Model Serving \& API Gateway (L)
+### Team 10: Model Serving \& API Gateway
 
 - Deploy model containers via Ray Serve
 - Expose RESTful APIs for inference
-- API authentication and rate limiting
+- API authentication, rate limiting, and documentation
 
 
-### 11. Model Performance Monitoring \& Drift Detection (H)
+### Team 11: Model Perf Monitoring \& Drift
 
-- Set up inference logging
-- Integrate data drift detection algorithms
+- Set up Prometheus monitoring for inference
+- Implement data drift detection algorithms
 - Configure alerting and notification
 
 
-### 12. Continuous Model Updating \& Version Management (L)
+### Team 12: Continuous Model Updating
 
 - Automate retraining pipeline with new data
 - Integrate MLflow for new model versioning
 - Implement rollback and deployment strategies
 
 
-### 13. N8n Workflow Automation \& Notification Integration (L)
+### Team 13: N8n Workflow Automation
 
 - Set up N8n workflows for notifications (email, Slack, etc.)
 - Automate retraining triggers and integration with external tools
 
 ---
 
-## Project Timeline and Dependencies
-
-Below are diagrams showing phase order, parallelism, and dependencies.
-All diagrams use only basic Mermaid `flowchart TD` syntax for maximum compatibility.
-
-### Gantt Chart (Timeline Representation)
-
-```mermaid
-flowchart TD
-    L1[1. Django GUI & User Auth] --> H1[2. Ray Cluster Mgmt & API]
-    L2[3. Data Source Selection & MinIO] --> H2[5. Hyperparam Mgmt & Ray Tune]
-    L3[4. Model Selection & AI Mode] --> H3[6. Training Orchestration RabbitMQ]
-    L4[7. Training Monitoring & Prometheus] --> H4[8. Model Eval & MLflow]
-    L5[10. Model Serving & API Gateway] --> H5[9. Model Packaging & Containerization]
-    L6[12. Continuous Model Updating] --> H6[11. Model Perf Monitoring & Drift]
-    L7[13. N8n Workflow Automation] --> H6
-```
-
-
-### Dependency Diagram (Phase Handoffs)
-
-```mermaid
-flowchart TD
-    L1[1. Django GUI & User Auth] --> H1[2. Ray Cluster Mgmt & API]
-    H1 --> H2[5. Hyperparam Mgmt & Ray Tune]
-    H2 --> H3[6. Training Orchestration RabbitMQ]
-    H3 --> H4[8. Model Eval & MLflow]
-    H4 --> H5[9. Model Packaging & Containerization]
-    H5 --> H6[11. Model Perf Monitoring & Drift]
-    H6 --> L6[12. Continuous Model Updating]
-    L7[13. N8n Workflow Automation] --> H6
-```
-
-
----
-
 ## Example User Story
 
-> A data scientist logs in, creates a project, selects MNIST from MinIO, chooses a CNN model, clicks “Auto-tune,” submits the job, watches training in Grafana, reviews results in MLflow, deploys the model via API, and monitors drift. When drift is detected, retraining is triggered and a new model version is deployed automatically.
+**A data scientist logs in, creates a project, selects MNIST from MinIO, chooses a CNN model, clicks “Auto-tune,” submits the job, watches training in Grafana, reviews results in MLflow, deploys the model via API, and monitors drift. When drift is detected, retraining is triggered and a new model version is deployed automatically.**
 
 ---
 
 ## Summary
 
-- **Application:** A full-featured, user-friendly, and automated MLOps platform for model training, deployment, monitoring, and lifecycle management.
-- **Usage:** Users interact through a web GUI, with all backend complexity abstracted away.
-- **Team Assignments:** Balanced, fair, and parallelizable, with clear dependencies and handoff points.
-- **Diagrams:** Included for architecture, timeline, and dependencies for maximum clarity.
+- **Application:** A user-friendly, end-to-end MLOps platform for model training, deployment, monitoring, and lifecycle management.
+- **User Experience:** All features are accessible through a web GUI, abstracting backend complexity.
+- **Team Assignments:** Each team has a clear, non-overlapping responsibility for a critical phase. No phase is ambiguous or unassigned.
+- **Timeline:** The project is scheduled to complete in 2.5 weeks, as shown in the Gantt chart.
+- **Architecture:** All major components and their interactions are shown in the architecture diagram.
 
 ---
