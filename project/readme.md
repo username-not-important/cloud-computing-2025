@@ -1,6 +1,26 @@
 # Project: Automated MLOps Platform with Ray
 
-# Automated MLOps Platform with Ray
+This project delivers a user-friendly, web-based MLOps platform that enables seamless machine learning workflow automation.
+Users can 
+
+- Upload datasets,
+- Select or define models, and
+- Launch distributed training jobs on Ray clusters
+
+all through a Django GUI. The platform supports
+- Hyperparameter tuning,
+- Real-time monitoring (Prometheus/Grafana),
+- Experiment tracking (MLflow), and
+- Automated model packaging and serving (Ray Serve, Docker).
+
+It also features 
+
+- Production monitoring,
+- Data drift detection, and
+- Automated retraining with workflow automation (n8n).
+
+All backend complexity is abstracted, providing a transparent, efficient, and scalable solution for end-to-end machine learning operations.
+
 
 ## Project Application: What This Platform Delivers
 
@@ -20,7 +40,7 @@ This platform is a **web-based MLOps solution** that allows users to:
 **All of this is accessible through a simple, secure Django web interface.**
 Users do not need to know anything about Ray, Docker, or the underlying infrastructure.
 
----
+
 
 ## System Architecture Diagram
 
@@ -88,7 +108,7 @@ flowchart TD
     E1 --> E3
 ```
 
----
+
 
 ## Team Assignments and Timeline (Gantt Chart)
 
@@ -112,7 +132,6 @@ flowchart TD
 | 13 | n8n Workflow Automation | L |
 
 
----
 
 ### Fair Team Assignments
 
@@ -160,7 +179,7 @@ gantt
     n8n Workflow Automation           :active,   t13, after t12, 4d
 ```
 
----
+
 
 ## Detailed Phase Responsibilities
 
@@ -252,13 +271,13 @@ gantt
 - Set up n8n workflows for notifications (email, telegram, etc.)
 - Automate retraining triggers and integration with external tools
 
----
+
 
 ## Example User Story
 
 **A data scientist logs in, creates a project, selects MNIST from MinIO, chooses a CNN model, clicks “Auto-tune,” submits the job, watches training in Grafana, reviews results in MLflow, deploys the model via API, and monitors drift. When drift is detected, retraining is triggered and a new model version is deployed automatically.**
 
----
+
 
 ## Summary
 
@@ -268,4 +287,3 @@ gantt
 - **Timeline:** The project is scheduled to complete in 2.5 weeks, as shown in the Gantt chart.
 - **Architecture:** All major components and their interactions are shown in the architecture diagram.
 
----
