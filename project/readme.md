@@ -51,7 +51,7 @@ flowchart TD
     ModelSel[4. Model Selection & AI Mode]
     RayMgmt[2. Ray Cluster Mgmt & API]
     RayTrain[5. Hyperparam Mgmt & Ray Tune]
-    Rabbit[6. Training Orchestration (RabbitMQ)]
+    Rabbit[6. Training Orchestration RabbitMQ]
     Prom[7. Training Monitoring & Prometheus]
     MLflow[8. Model Eval & MLflow]
     Docker[9. Model Packaging & Containerization]
@@ -258,7 +258,7 @@ flowchart TD
     subgraph Heavy_Phases
         H1[2. Ray Cluster Mgmt & API]
         H2[5. Hyperparam Mgmt & Ray Tune]
-        H3[6. Training Orchestration (RabbitMQ)]
+        H3[6. Training Orchestration RabbitMQ]
         H4[8. Model Eval & MLflow]
         H5[9. Model Packaging & Containerization]
         H6[11. Model Perf Monitoring & Drift]
@@ -291,7 +291,7 @@ This diagram clarifies which phases depend on the completion of others, ensuring
 flowchart TD
     L1[1. Django GUI & User Auth] --> H1[2. Ray Cluster Mgmt & API]
     L2[3. Data Source Selection & MinIO] --> H2[5. Hyperparam Mgmt & Ray Tune]
-    L3[4. Model Selection & AI Mode] --> H3[6. Training Orchestration (RabbitMQ)]
+    L3[4. Model Selection & AI Mode] --> H3[6. Training Orchestration RabbitMQ]
     L4[7. Training Monitoring & Prometheus] --> H4[8. Model Eval & MLflow]
     L5[10. Model Serving & API Gateway] --> H5[9. Model Packaging & Containerization]
     L6[12. Continuous Model Updating] --> H6[11. Model Perf Monitoring & Drift]
