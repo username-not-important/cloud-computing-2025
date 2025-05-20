@@ -14,7 +14,7 @@ This platform is a **web-based MLOps solution** that allows users to:
 - **Track all experiments and models** (hyperparameters, metrics, artifacts, and versioning) with MLflow
 - **Package and serve trained models** as APIs (using Ray Serve, Docker, and REST endpoints)
 - **Monitor model performance and detect data drift** in production (Prometheus, custom drift detection)
-- **Trigger automatic retraining and model updates** when performance degrades or drift is detected (N8n workflows)
+- **Trigger automatic retraining and model updates** when performance degrades or drift is detected (n8n workflows)
 - **Manage model versions and rollback** to previous states as needed
 
 **All of this is accessible through a simple, secure Django web interface.**
@@ -30,7 +30,7 @@ flowchart TD
     Django --> MinIO[Data Source Selection & MinIO]
     Django --> ModelSel[Model Selection & AI Mode]
     Django --> RayMgmt[Ray Cluster Mgmt & API]
-    Django --> Rabbit[Training Orchestration (RabbitMQ)]
+    Django --> Rabbit[Training Orchestration RabbitMQ]
     MinIO --> RayTrain[Hyperparam Mgmt & Ray Tune]
     ModelSel --> RayTrain
     RayMgmt --> RayTrain
@@ -43,7 +43,7 @@ flowchart TD
     Serve --> Drift[Model Perf Monitoring & Drift]
     Drift --> Update[Continuous Model Updating]
     Update --> MLflow
-    Drift --> N8n[N8n Workflow Automation]
+    Drift --> n8n[n8n Workflow Automation]
     Prom --> Grafana[Grafana Dashboards]
     RayMgmt --> RayDash[Ray Dashboard]
 ```
@@ -62,14 +62,14 @@ flowchart TD
 | Team 3 | Model Selection \& AI Mode | Create GUI for model template selection and user model upload, map to backend configs. |
 | Team 4 | Ray Cluster Mgmt \& API | Develop backend logic to provision Ray clusters (with Docker), manage GPU/CPU allocation, ensure user isolation. |
 | Team 5 | Hyperparam Mgmt \& Ray Tune | Build hyperparameter input forms and integrate Ray Tune for automated search/tuning. |
-| Team 6 | Training Orchestration (RabbitMQ) | Set up RabbitMQ, implement job submission/queueing, develop backend workers for job execution and status tracking. |
+| Team 6 | Training Orchestration RabbitMQ | Set up RabbitMQ, implement job submission/queueing, develop backend workers for job execution and status tracking. |
 | Team 7 | Training Monitoring \& Prometheus | Instrument training scripts for Prometheus metrics, set up exporters, create Grafana dashboards for training. |
 | Team 8 | Model Eval \& MLflow | Integrate MLflow for experiment tracking, log all metrics, parameters, and artifacts, enable model versioning. |
 | Team 9 | Model Packaging \& Containerization | Automate Docker packaging of trained models, prepare Ray Serve deployment images. |
 | Team 10 | Model Serving \& API Gateway | Deploy model containers via Ray Serve, expose RESTful APIs, secure endpoints, document usage. |
 | Team 11 | Model Perf Monitoring \& Drift | Set up Prometheus monitoring for inference, implement drift detection, configure alerting. |
 | Team 12 | Continuous Model Updating | Automate retraining with new data, integrate with MLflow for versioning, implement rollback logic. |
-| Team 13 | N8n Workflow Automation | Configure N8n for notifications (email, Slack), automate retraining triggers, integrate with external tools. |
+| Team 13 | n8n Workflow Automation | Configure n8n for notifications (email, Slack), automate retraining triggers, integrate with external tools. |
 
 
 ```mermaid
@@ -85,7 +85,7 @@ gantt
     section Core Backend
     Ray Cluster Mgmt & API            :active, t2, 2025-06-08, 3d
     Hyperparam Mgmt & Ray Tune        :        t5, after t3, 3d
-    Training Orchestration (RabbitMQ) :        t6, after t4, 3d
+    Training Orchestration RabbitMQ :        t6, after t4, 3d
 
     section Monitoring & Evaluation
     Training Monitoring & Prometheus  :        t7, after t4, 3d
@@ -98,7 +98,7 @@ gantt
     section Production & Automation
     Model Perf Monitoring & Drift     :        t11, after t10, 3d
     Continuous Model Updating         :        t12, after t11, 3d
-    N8n Workflow Automation           :        t13, after t12, 3d
+    n8n Workflow Automation           :        t13, after t12, 3d
 ```
 
 ---
@@ -140,7 +140,7 @@ gantt
 - Store configurations for reproducibility
 
 
-### Team 6: Training Orchestration (RabbitMQ)
+### Team 6: Training Orchestration RabbitMQ
 
 - Integrate RabbitMQ for job queueing
 - Develop worker logic for job execution
@@ -188,9 +188,9 @@ gantt
 - Implement rollback and deployment strategies
 
 
-### Team 13: N8n Workflow Automation
+### Team 13: n8n Workflow Automation
 
-- Set up N8n workflows for notifications (email, Slack, etc.)
+- Set up n8n workflows for notifications (email, Slack, etc.)
 - Automate retraining triggers and integration with external tools
 
 ---
