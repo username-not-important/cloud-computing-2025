@@ -1,100 +1,325 @@
-# Project: Automated MLOps Pipeline with Ray
+# Project: Automated MLOps Platform with Ray
 
-This project aims to design and implement a fully automated MLOps platform, inspired by the feature set of Anyscale. Students will collaboratively construct a modular, distributed machine learning pipeline using Ray, focusing on **automation**, **scalability**, and **reproducibility**. 
+## 1. Project Overview
 
-The pipeline will cover:
+# Automated MLOps Platform with Ray
 
-- data ingestion,
-- preprocessing,
-- model training (with a focus on LLMs),
-- deployment,
-- monitoring, and
-- orchestration.
+## Overview
 
-## Objectives
+This project delivers a web-based MLOps platform that empowers users—including non-experts—to:
 
-- Automate the entire ML workflow, from data scraping to model monitoring.
-- Enable distributed computing for scalability and efficiency.
-- Ensure modularity, allowing each group to focus on a distinct pipeline component.
-- Promote reproducibility and best practices in MLOps.
+- Upload or select datasets from MinIO (S3-compatible storage)
+- Choose or define machine learning models (e.g., CNN for MNIST)
+- Set or auto-tune hyperparameters
+- Launch distributed training jobs on Ray clusters (with GPU/CPU support)
+- Monitor training progress and resource usage in real time
+- Track experiments and models with MLflow
+- Package, version, and serve trained models via APIs
+- Monitor models in production for performance and data drift
+- Trigger retraining and manage model versions with full history and rollback
 
-## Project Structure and Group Responsibilities
+All features are accessed through a **Django-powered web GUI**. The backend orchestrates all technical workflows, so users do not need to interact directly with Ray, Docker, or the underlying infrastructure.
 
-The project is divided into **five** main phases, each assigned to specific student groups:
 
-### Phase 1: Data Ingestion & Cleaning <mark>Groups 1, 2 & 3</mark>
+## System Architecture
 
-- Implement automated web scraping using Ray Actors for parallelization.
-- Perform data validation and cleaning to ensure high-quality input for model training.
-- Store and version datasets using Ray Datasets and cloud storage (e.g., AWS S3 compatible open source storage, MinIO).
+The platform consists of the following core components:
 
-### Phase 2: Model Training <mark>Groups 4, 5 & 6</mark>
 
-- Automate hyperparameter tuning with Ray Tune.
-- Implement distributed training for LLMs (e.g., **Llama**) using Ray Train.
-- Track experiments and results with Ray and **MLflow**.
+| Component | Role |
+| :-- | :-- |
+| **Django** | Provides the main web GUI and orchestrates workflows. Handles user authentication, project management, and triggers backend processes (e.g., launching training jobs, monitoring, serving models). |
+| **Ray** | Executes distributed training, hyperparameter tuning (Ray Tune), and model serving (Ray Serve). Each user/job gets a dedicated Ray cluster, provisioned via Docker with GPU/CPU support as needed. |
+| **MinIO** | S3-compatible object storage for datasets, model artifacts, and logs. Users upload/select data here; Ray jobs read/write directly to MinIO. |
+| **RabbitMQ** | Decouples job submission from execution. Django submits jobs to RabbitMQ; backend workers listen for jobs and launch Ray clusters. Enables asynchronous, scalable processing. |
+| **MLflow** | Tracks experiments, logs hyperparameters, metrics, and artifacts. Provides a searchable model registry with versioning and lineage. |
+| **Docker** | Containerizes Ray clusters and model serving APIs, ensuring reproducible, isolated environments with GPU/CPU compatibility. |
+| **Prometheus** | Collects metrics (training loss, accuracy, resource usage, inference latency) from Ray clusters and serving APIs. |
+| **Grafana** | Visualizes metrics from Prometheus. Provides dashboards for users and admins to monitor training and serving in real time. |
+| **Ray Dashboard** | Native Ray UI for monitoring clusters, jobs, and resources. Useful for advanced users and debugging. |
+| **N8n** | Workflow automation for notifications (e.g., drift alerts), retraining triggers, and integration with external tools (email, Slack, ticketing). |
 
-### Phase 3: Model Serving & Monitoring <mark>Groups 7, 8 & 9</mark>
+### System Architecture Diagram
 
-- Deploy trained models using Ray Serve, enabling scalable API endpoints.
-- Integrate monitoring tools (Prometheus, Grafana) for real-time performance tracking.
-- Implement data drift detection and automate retraining triggers.
+The following diagram illustrates the high-level flow and integration of all core components:
 
-### Phase 4: Pipeline Orchestration <mark>Groups 10 & 11</mark>
+```mermaid
+flowchart TD
+    User[User]
+    Django[1. Django GUI & User Auth]
+    MinIO[3. Data Source Selection & MinIO]
+    ModelSel[4. Model Selection & AI Mode]
+    RayMgmt[2. Ray Cluster Mgmt & API]
+    RayTrain[5. Hyperparam Mgmt & Ray Tune]
+    Rabbit[6. Training Orchestration (RabbitMQ)]
+    Prom[7. Training Monitoring & Prometheus]
+    MLflow[8. Model Eval & MLflow]
+    Docker[9. Model Packaging & Containerization]
+    Serve[10. Model Serving & API Gateway]
+    Drift[11. Model Perf Monitoring & Drift]
+    Update[12. Continuous Model Updating]
+    N8n[13. N8n Workflow Automation]
+    Grafana[Grafana Dashboards]
+    RayDash[Ray Dashboard]
 
-- Orchestrate the end-to-end workflow using **Apache Airflow**.
-- Automate task scheduling, error handling, and notifications.
+    User --> Django
+    Django --> MinIO
+    Django --> ModelSel
+    Django --> RayMgmt
+    Django --> Rabbit
+    MinIO --> RayTrain
+    ModelSel --> RayTrain
+    RayMgmt --> RayTrain
+    RayTrain --> Rabbit
+    Rabbit --> Prom
+    Rabbit --> MLflow
+    RayTrain --> MLflow
+    MLflow --> Docker
+    Docker --> Serve
+    Serve --> Drift
+    Drift --> Update
+    Update --> MLflow
+    Drift --> N8n
+    Prom --> Grafana
+    RayMgmt --> RayDash
+```
 
-### Phase 5: Infrastructure & Security <mark>Groups 12 & 13</mark>
 
-- Configure and manage Ray clusters.
-- Implement secure data access and Attribute Base Access Control (ABAC) management in Ray.
 
-## Technical Requirements
+## Workflow: User Journey
 
-1. Programming Language: Python 3.8+
-2. Core Framework: Ray
-3. Orchestration: Apache Airflow
-4. Experiment Tracking: MLflow
-5. Monitoring: Prometheus, Grafana
-6. Cloud Storage: MinIO, or similar
-7. Model: Llama or equivalent LLM
+1. **User logs in via Django GUI.**
+2. **User creates/selects a project and dataset** (from MinIO or uploads new data).
+3. **User selects a model architecture** (template or custom).
+4. **User sets or auto-tunes hyperparameters** (manual or via Ray Tune).
+5. **Job submission and Ray cluster provisioning** (Django → RabbitMQ → Ray cluster via Docker).
+6. **Distributed training and real-time monitoring** (metrics to Prometheus, dashboards in Grafana).
+7. **Experiment tracking and model registration** (MLflow).
+8. **Model packaging and API deployment** (Docker container, Ray Serve).
+9. **Model performance monitoring** (Prometheus, Grafana).
+10. **Data drift detection and retraining automation** (N8n, MLflow versioning).
 
-## Automation Focus
 
-<mark>**Automation is a key requirement at every stage**</mark>:
+## Team Assignments
 
-- **Data ingestion must automatically scrape and validate new data**.
-- **Model training should trigger on new data or drift detection**.
-- **Deployment must support continuous integration and canary releases**.
-- **Monitoring should provide alerts and auto-retraining capabilities**.
-- **Orchestration must ensure seamless, hands-off pipeline execution**.
+To ensure fairness and efficiency, each of the 13 teams is assigned one heavy (complex) and one light (simpler) phase.
+This guarantees balanced workloads and parallel progress.
 
-## Evaluation Criteria
+### Phase Complexity
 
-- Correctness and completeness of each pipeline component
-- Degree of automation achieved
-- Scalability and efficiency of distributed components
-- Quality of documentation and code readability
-- Collaboration and integration between groups
+| Phase | Description | Complexity |
+| :-- | :-- | :-- |
+| 1 | Django GUI \& User Authentication | L |
+| 2 | Ray Cluster Management \& System API Integration | H |
+| 3 | Data Source Selection \& MinIO Integration | L |
+| 4 | Model Selection \& AI Mode Configuration | L |
+| 5 | Hyperparameter Management \& Ray Tune Integration | H |
+| 6 | Training Orchestration with RabbitMQ | H |
+| 7 | Training Monitoring \& Prometheus Integration | L |
+| 8 | Model Evaluation \& MLflow Integration | H |
+| 9 | Model Packaging \& Containerization | H |
+| 10 | Model Serving \& API Gateway | L |
+| 11 | Model Performance Monitoring \& Drift Detection | H |
+| 12 | Continuous Model Updating \& Version Management | L |
+| 13 | N8n Workflow Automation \& Notification Integration | L |
 
-## Notes:
+### Team-to-Phase Assignment
 
-- Deployment Environment: Pure code file are not acceptable, the deployment must be dockerize and tested on Kubernetes platform.
+| Team | Heavy Phase (H) | Light Phase (L) |
+| :-- | :-- | :-- |
+| Team 1 | 2. Ray Cluster Management \& System API Integration | 1. Django GUI \& User Authentication |
+| Team 2 | 5. Hyperparameter Management \& Ray Tune Integration | 3. Data Source Selection \& MinIO Integration |
+| Team 3 | 6. Training Orchestration with RabbitMQ | 4. Model Selection \& AI Mode Configuration |
+| Team 4 | 8. Model Evaluation \& MLflow Integration | 7. Training Monitoring \& Prometheus Integration |
+| Team 5 | 9. Model Packaging \& Containerization | 10. Model Serving \& API Gateway |
+| Team 6 | 11. Model Performance Monitoring \& Drift Detection | 12. Continuous Model Updating \& Version Management |
+| Team 7 | — | 13. N8n Workflow Automation \& Notification Integration |
 
-- Teams Collaboration: Teams must collaborate with each other, some parts required the other team results and team which are unwilling to collaborate will get negative point as mentioned in `Evaluation Criteria` section.
 
-- Using any other tools for automation such as `n8n` is also acceptable but it must not limit the development/ deployment process, in other words it must be robust.
+---
 
-## References
+## Phase Details
 
-- [MLOps: Continuous Delivery and Automation Pipelines in Machine Learning](https://ml-ops.org/)
-- [Anyscale Documentation](https://docs.anyscale.com/)
-- [Ray Documentation](https://docs.ray.io/en/latest/)
-- [Ray Serve Deployment Graphs](https://docs.ray.io/en/latest/serve/production-guide.html#deployment-graphs)
-- [Ray Tune for Hyperparameter Optimization](https://docs.ray.io/en/latest/tune/index.html)
-- [Ray Train for Distributed Training](https://docs.ray.io/en/latest/train/index.html)
-- [Ray Datasets](https://docs.ray.io/en/latest/data/dataset.html)
-- [Airflow and Ray Integration](https://docs.anyscale.com/reference/integrations/airflow)
-- [MLflow Documentation](https://mlflow.org/docs/latest/index.html)
-- [Prometheus Monitoring](https://prometheus.io/docs/introduction/overview/)
+> Each phase is described below with its main tasks.
+
+### 1. Django GUI \& User Authentication (L)
+
+- Django project setup
+- User registration/login/password reset
+- Main navigation and project dashboard
+- Project and dataset selection pages
+
+
+### 2. Ray Cluster Management \& System API Integration (H)
+
+- Backend logic to launch Ray clusters via system API
+- Docker orchestration for Ray clusters
+- GPU/CPU resource detection and allocation
+- User isolation for Ray clusters
+
+
+### 3. Data Source Selection \& MinIO Integration (L)
+
+- Django forms for data selection/upload
+- Integrate MinIO S3 APIs
+- Credential management and validation
+
+
+### 4. Model Selection \& AI Mode Configuration (L)
+
+- GUI for model template selection
+- Template management and mapping to Ray jobs
+- Allow custom model uploads
+
+
+### 5. Hyperparameter Management \& Ray Tune Integration (H)
+
+- Forms for manual hyperparameter entry
+- Integrate Ray Tune for auto-tuning
+- Store configurations for reproducibility
+
+
+### 6. Training Orchestration with RabbitMQ (H)
+
+- Integrate RabbitMQ for job queueing
+- Develop worker logic for job execution
+- Job status updates and error handling
+
+
+### 7. Training Monitoring \& Prometheus Integration (L)
+
+- Instrument training scripts for Prometheus metrics
+- Set up Prometheus exporters
+- Create Grafana dashboards
+
+
+### 8. Model Evaluation \& MLflow Integration (H)
+
+- Integrate MLflow for experiment tracking
+- Log model parameters, metrics, artifacts
+- Model versioning and lineage tracking
+
+
+### 9. Model Packaging \& Containerization (H)
+
+- Automate model packaging in Docker containers
+- Build APIs for model inference (Ray Serve)
+- Store container images in registry
+
+
+### 10. Model Serving \& API Gateway (L)
+
+- Deploy model containers via Ray Serve
+- Expose RESTful APIs for inference
+- API authentication and rate limiting
+
+
+### 11. Model Performance Monitoring \& Drift Detection (H)
+
+- Set up inference logging
+- Integrate data drift detection algorithms
+- Configure alerting and notification
+
+
+### 12. Continuous Model Updating \& Version Management (L)
+
+- Automate retraining pipeline with new data
+- Integrate MLflow for new model versioning
+- Implement rollback and deployment strategies
+
+
+### 13. N8n Workflow Automation \& Notification Integration (L)
+
+- Set up N8n workflows for notifications (email, Slack, etc.)
+- Automate retraining triggers and integration with external tools
+
+---
+
+## Project Timeline and Dependencies
+
+The following diagrams clarify the **order of work, parallelism, and dependencies** between phases and teams.
+
+### Gantt Chart (Phase Timeline Representation)
+
+This flowchart shows which phases can be worked on in parallel and how they progress.
+
+```mermaid
+flowchart TD
+    subgraph Light_Phases
+        L1[1. Django GUI & User Auth]
+        L2[3. Data Source Selection & MinIO]
+        L3[4. Model Selection & AI Mode]
+        L4[7. Training Monitoring & Prometheus]
+        L5[10. Model Serving & API Gateway]
+        L6[12. Continuous Model Updating]
+        L7[13. N8n Workflow Automation]
+    end
+
+    subgraph Heavy_Phases
+        H1[2. Ray Cluster Mgmt & API]
+        H2[5. Hyperparam Mgmt & Ray Tune]
+        H3[6. Training Orchestration (RabbitMQ)]
+        H4[8. Model Eval & MLflow]
+        H5[9. Model Packaging & Containerization]
+        H6[11. Model Perf Monitoring & Drift]
+    end
+
+    %% Phase dependencies
+    L1 --> H1
+    L2 --> H2
+    L3 --> H3
+    L4 --> H4
+    L5 --> H5
+    L6 --> H6
+    L7 --> H6
+
+    %% Parallel work
+    H1 & L1 --> H2 & L2
+    H2 & L2 --> H3 & L3
+    H3 & L3 --> H4 & L4
+    H4 & L4 --> H5 & L5
+    H5 & L5 --> H6 & L6
+    H6 & L6 --> L7
+```
+
+
+### Dependency Diagram (Phase Handoffs)
+
+This diagram clarifies which phases depend on the completion of others, ensuring teams know their handoff points.
+
+```mermaid
+flowchart TD
+    L1[1. Django GUI & User Auth] --> H1[2. Ray Cluster Mgmt & API]
+    L2[3. Data Source Selection & MinIO] --> H2[5. Hyperparam Mgmt & Ray Tune]
+    L3[4. Model Selection & AI Mode] --> H3[6. Training Orchestration (RabbitMQ)]
+    L4[7. Training Monitoring & Prometheus] --> H4[8. Model Eval & MLflow]
+    L5[10. Model Serving & API Gateway] --> H5[9. Model Packaging & Containerization]
+    L6[12. Continuous Model Updating] --> H6[11. Model Perf Monitoring & Drift]
+    L7[13. N8n Workflow Automation] --> H6
+
+    %% Show overall flow
+    H1 --> H2
+    H2 --> H3
+    H3 --> H4
+    H4 --> H5
+    H5 --> H6
+    H6 --> L6
+```
+
+
+---
+
+## Example User Story
+
+> A data scientist logs in, creates a project, selects MNIST from MinIO, chooses a CNN model, clicks “Auto-tune,” submits the job, watches training in Grafana, reviews results in MLflow, deploys the model via API, and monitors drift. When drift is detected, retraining is triggered and a new model version is deployed automatically.
+
+---
+
+## Summary
+
+- **Application:** A full-featured, user-friendly, and automated MLOps platform for model training, deployment, monitoring, and lifecycle management.
+- **Usage:** Users interact through a web GUI, with all backend complexity abstracted away.
+- **Team Assignments:** Balanced, fair, and parallelizable, with clear dependencies and handoff points.
+- **Diagrams:** Included for architecture, timeline, and dependencies for maximum clarity.
+
+---
