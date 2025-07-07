@@ -1,6 +1,6 @@
 # Cloud Computing Final Project: Automated Machine Learning Workflow System
 
-This project outlines the design and implementation of an automated system for managing and executing machine learning (ML) workflows, including model training and serving. The system leverages **Ray Clusters** for distributed computation, complemented by **Apache Airflow** for workflow orchestration, **MinIO** for scalable data storage, and **Postgres** for metadata management.
+This project outlines the design and implementation of an automated system for managing and executing machine learning (ML) workflows, including model training and serving. The system leverages **Ray Clusters** as the underlying infrastructure for distributed computation. Integration with components like **Apache Airflow**, **MinIO**, and **Postgres** ensures scalability, workflow orchestration, and data management.
 
 ## System Overview
 
@@ -27,30 +27,33 @@ The system comprises several interconnected components, each fulfilling a specif
 
 The following sequence illustrates a typical ML workflow execution within the system:
 
-1. **Workflow Initiation**: The **Workflow Orchestrator (Airflow)** is manually or programmatically invoked to initiate an ML workflow.
-2. **Training Cluster Request**: **Airflow** requests a **Ray Cluster** specifically for AI model training from the **Cluster Manager**.
-3. **Cluster Provisioning**: The **Cluster Manager** initializes a **Ray Cluster** and returns the head node's address to the **Orchestrator**.
-4. **Job Submission**: Upon confirming the **Ray Cluster's** health, the **Orchestrator** submits the training job to the allocated **Ray Cluster**.
-5. **Artifact Storage and Cluster Termination**: Once the training job successfully completes, the **Ray Training Cluster** stores the trained AI model artifacts on the **MinIO Storage Server**. Subsequently, the **Cluster Manager** terminates the training cluster.
-6. **Serving Cluster Request**: Following the successful storage of the model, the **Orchestrator** proceeds with the serving phase, requesting a new **Ray Cluster** from the **Cluster Manager** for model serving.
-7. **Serving Cluster Provisioning**: The **Cluster Manager** initializes the **Ray Serving Cluster** and provides the head node's address to the **Orchestrator**.
-8. **Model Deployment**: **Airflow** verifies the health of the **Serving Ray Cluster** and submits a Ray job to package the model from the **Storage Server** and deploy it as a Docker image.
-9. **Model Serving**: The **Serving Ray Cluster** reads the model from the **Storage Server**, serves it as a Docker container, and exposes a port for inference requests.
-
----
+1.  **Workflow Initiation**: The **Workflow Orchestrator (Airflow)** is manually or programmatically invoked to initiate an ML workflow.
+2.  **Training Cluster Request**: **Airflow** requests a **Ray Cluster** specifically for AI model training from the **Cluster Manager**.
+3.  **Cluster Provisioning**: The **Cluster Manager** initializes a **Ray Cluster** and returns the head node's address to the **Orchestrator**.
+4.  **Job Submission**: Upon confirming the **Ray Cluster's** health, the **Orchestrator** submits the training job to the allocated **Ray Cluster**.
+5.  **Artifact Storage and Cluster Termination**: Once the training job successfully completes, the **Ray Training Cluster** stores the trained AI model artifacts on the **MinIO Storage Server**. Subsequently, the **Cluster Manager** terminates the training cluster.
+6.  **Serving Cluster Request**: Following the successful storage of the model, the **Orchestrator** proceeds with the serving phase, requesting a new **Ray Cluster** from the **Cluster Manager** for model serving.
+7.  **Serving Cluster Provisioning**: The **Cluster Manager** initializes the **Ray Serving Cluster** and provides the head node's address to the **Orchestrator**.
+8.  **Model Deployment**: **Airflow** verifies the health of the **Serving Ray Cluster** and submits a Ray job to package the model from the **Storage Server** and deploy it as a Docker image.
+9.  **Model Serving**: The **Serving Ray Cluster** reads the model from the **Storage Server**, serves it as a Docker container, and exposes a port for inference requests.
 
 ## Optional Bonus Components
 
 These components are not essential for core system functionality but significantly enhance its capabilities:
 
-1. **MLflow Integration**:
+1.  **MLflow Integration**:
     * Enables advanced model tracking, including versioning and lineage, for trained models.
     * Facilitates logging of key metrics (e.g., training accuracy, loss curves) for comprehensive experiment tracking.
-2. **Prometheus and Grafana**:
+2.  **Prometheus and Grafana**:
     * Provides robust monitoring capabilities for **Ray Cluster** performance (e.g., resource utilization, job latency).
     * Offers customizable dashboards for visualizing system health and performance metrics.
+3.  **Apache ZooKeeper**:
+    * Introduces a centralized, highly available service for robust distributed coordination across multiple Ray clusters.
+    * Enables **service discovery and registration** for Ray Head Nodes, allowing dynamic location of active clusters.
+    * Facilitates **distributed configuration management**, ensuring consistent settings across the entire multi-cluster environment.
+    * Supports **distributed locking and synchronization primitives**, preventing race conditions when multiple clusters access shared resources.
+    * Can be used for **leader election** in scenarios requiring a single coordinator for cross-cluster operations, enhancing fault tolerance and consistency.
 
----
 
 ## Details on Core Components and Their Roles
 
@@ -58,53 +61,53 @@ These components are not essential for core system functionality but significant
 
 * **Role**: **Airflow** serves as the system's central nervous system, orchestrating complex workflows through the execution of Directed Acyclic Graphs (DAGs). It coordinates the lifecycle of ML workflows, encompassing job submission, progress tracking, and seamless integration with other components.
 * **Example Tasks**:
-  * Triggering ML model training and serving workflows.
-  * Interfacing with the **Ray Cluster Manager** for dynamic cluster provisioning.
-  * Monitoring cluster health, submitting jobs, and tracking their status.
-  * Implementing conditional logic, such as task retries for robustness.
+    * Triggering ML model training and serving workflows.
+    * Interfacing with the **Ray Cluster Manager** for dynamic cluster provisioning.
+    * Monitoring cluster health, submitting jobs, and tracking their status.
+    * Implementing conditional logic, such as task retries for robustness.
 * **Rationale**: **Airflow** provides a intuitive graphical user interface for workflow monitoring and supports the definition and execution of complex, interdependent workflows with built-in retry mechanisms.
 
 ### 2. Ray Cluster Manager
 
 * **Role**: This component is responsible for the provisioning, management, and monitoring of **Ray Clusters** specifically tailored for AI workflows. It handles the complete lifecycle, from creation to termination.
 * **Key APIs**:
-  * **Cluster Creation API**: Used by **Airflow** to request and instantiate **Ray Clusters**.
-  * **Serve-Service Discovery**: Tracks active serving clusters and exposes their endpoints for external access.
-  * **Lifecycle Manager**: Ensures efficient resource allocation and timely cleanup of dormant clusters.
+    * **Cluster Creation API**: Used by **Airflow** to request and instantiate **Ray Clusters**.
+    * **Serve-Service Discovery**: Tracks active serving clusters and exposes their endpoints for external access.
+    * **Lifecycle Manager**: Ensures efficient resource allocation and timely cleanup of dormant clusters.
 * **Rationale**: The **Cluster Manager** provides centralized control over distributed compute resources, enabling dynamic scaling and optimizing the utilization of **Ray Clusters**.
 
 ### 3. Ray AI-Model Training Clusters
 
 * **Role**: These are dedicated **Ray Clusters** designed for executing distributed ML model training workloads. Each cluster comprises a **Ray Head Node** (for cluster management) and multiple **Ray Worker Nodes** (for performing training tasks).
 * **Key Features**:
-  * Executes training jobs submitted by **Airflow**.
-  * Persists trained model artifacts to **MinIO** storage.
-  * Exports performance metrics (e.g., training accuracy, loss curves) via **Prometheus** (optional).
-  * Integrates with **MLflow** for advanced model versioning and experiment tracking (optional).
+    * Executes training jobs submitted by **Airflow**.
+    * Persists trained model artifacts to **MinIO** storage.
+    * Exports performance metrics (e.g., training accuracy, loss curves) via **Prometheus** (optional).
+    * Integrates with **MLflow** for advanced model versioning and experiment tracking (optional).
 * **Rationale**: **Ray Training Clusters** are optimized for distributed training, offering horizontal scalability to accelerate model training on large datasets.
 
 ### 4. Ray AI-Model Serving Clusters
 
 * **Role**: These dedicated **Ray Clusters** are responsible for deploying and serving trained ML models. They package models as Docker containers and expose endpoints for inference.
 * **Key Features**:
-  * Packages models stored in **MinIO** into deployable Docker containers.
-  * Serves models via REST API or gRPC endpoints for real-time predictions.
-  * Monitors serving performance (e.g., latency, throughput) using **Prometheus** (optional).
+    * Packages models stored in **MinIO** into deployable Docker containers.
+    * Serves models via REST API or gRPC endpoints for real-time predictions.
+    * Monitors serving performance (e.g., latency, throughput) using **Prometheus** (optional).
 * **Rationale**: **Ray Serving Clusters** provide a scalable, low-latency infrastructure for model inference, effectively isolating serving workloads from training for optimized resource utilization.
 
 ### 5. MinIO S3 Storage Server
 
 * **Role**: **MinIO** functions as the **centralized object storage system** for all model artifacts, datasets, and intermediate results generated throughout the ML workflow.
 * **Key Features**:
-  * Stores trained models produced by **Ray Training Clusters**.
-  * Provides an S3-compatible API for seamless access to stored artifacts.
-  * Ensures high durability and scalability for large files, such as models and datasets.
+    * Stores trained models produced by **Ray Training Clusters**.
+    * Provides an S3-compatible API for seamless access to stored artifacts.
+    * Ensures high durability and scalability for large files, suchs as models and datasets.
 * **Rationale**: **MinIO** offers a lightweight, S3-compatible storage solution that is well-suited for distributed AI workflows, providing reliable and accessible data exchange.
 
 ### 6. Postgres Database
 
 * **Role**: The **Postgres Database** stores critical metadata pertaining to workflows, clusters, and models. It maintains references to models stored in **MinIO** and their corresponding serving endpoints.
 * **Key Features**:
-  * Maintains a comprehensive registry of active clusters and their current states.
-  * Tracks detailed workflow execution records for auditing and debugging purposes.
+    * Maintains a comprehensive registry of active clusters and their current states.
+    * Tracks detailed workflow execution records for auditing and debugging purposes.
 * **Rationale**: **Postgres** provides a reliable and scalable relational database solution for managing the system's metadata, ensuring data integrity and traceability.
