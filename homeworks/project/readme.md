@@ -115,3 +115,71 @@ These components are not essential for core system functionality but significant
     * Maintains a comprehensive registry of active clusters and their current states.
     * Tracks detailed workflow execution records for auditing and debugging purposes.
 * **Rationale**: **Postgres** provides a reliable and scalable relational database solution for managing the system's metadata, ensuring data integrity and traceability.
+
+
+## Ray Job Submission Framework
+
+The system incorporates a comprehensive framework for submitting and executing machine learning training tasks directly to Ray Clusters through the Ray Command Line Interface (CLI). This framework facilitates independent job execution and enables systematic testing of training workflows outside the primary orchestration pipeline, thereby supporting both development and production environments.
+
+### Pre-configured Training Job Implementations
+
+The project encompasses two distinct, production-ready training job implementations, strategically designed to demonstrate different neural network architectures and dataset domains. These implementations reside within the `homeworks/project/job/` directory and serve as exemplars for scalable machine learning workflow development:
+
+* **LeNet-5 MNIST Classification (`lenet_mnist_train.py`)**: 
+  * Implements the seminal LeNet-5 convolutional neural network architecture, originally proposed by LeCun et al.
+  * Designed for handwritten digit recognition using the canonical MNIST dataset.
+  * Demonstrates foundational deep learning principles and serves as a benchmark for distributed training capabilities.
+
+* **Contemporary CNN Fashion-MNIST Classification (`cnn_fmnist_train.py`)**: 
+  * Employs a modern multi-layer convolutional neural network architecture with advanced regularization techniques.
+  * Targets fashion item classification using the Fashion-MNIST dataset, providing increased complexity compared to traditional digit recognition.
+  * Incorporates contemporary best practices including dropout regularization and adaptive optimization algorithms.
+
+### Distributed Job Submission Methodology
+
+Training jobs are submitted to active Ray Clusters utilizing a standardized command protocol that ensures consistent runtime environment provisioning and dependency management. The submission framework adheres to the following architectural pattern:
+
+```bash
+ray job submit --address http://RAY_HEAD_NODE:8265 \
+    --runtime-env-json='{"working_dir": ".", "pip": ["torch", "torchvision", "ray[train]"]}' \
+    --job-name="DESCRIPTIVE_JOB_IDENTIFIER" \
+    -- python job/TRAINING_SCRIPT.py
+```
+
+### Parameterization and Configuration Management
+
+Both training implementations support comprehensive parameterization through Ray's native job configuration mechanism, enabling fine-tuned control over training hyperparameters and operational settings. The configuration schema encompasses the following parameters:
+
+* **`data_dir`**: Filesystem path designation for dataset storage, caching, and intermediate artifact management (default configuration: `"./data"`)
+* **`num_epochs`**: Integer specification of complete training cycles over the entire dataset (default configuration: `10`)
+* **`batch_size`**: Numerical designation of sample batch size for mini-batch gradient descent optimization (default configuration: `64`)
+* **`learning_rate`**: Floating-point specification of the optimization algorithm's step size parameter (default configuration: `0.001`)
+
+### Practical Implementation Examples
+
+The following command sequences demonstrate the systematic submission of training jobs to a local or remote Ray Cluster infrastructure:
+
+```bash
+# Submission of LeNet-5 MNIST training workflow
+ray job submit --address http://localhost:8265 \
+    --runtime-env-json='{"working_dir": ".", "pip": ["torch", "torchvision", "ray[train]"]}' \
+    --job-name="lenet-mnist-classification-training" \
+    -- python job/lenet_mnist_train.py
+
+# Submission of CNN Fashion-MNIST training workflow
+ray job submit --address http://localhost:8265 \
+    --runtime-env-json='{"working_dir": ".", "pip": ["torch", "torchvision", "ray[train]"]}' \
+    --job-name="cnn-fashion-mnist-classification-training" \
+    -- python job/cnn_fmnist_train.py
+```
+
+### Comprehensive Monitoring and Performance Analytics
+
+Upon successful job initialization and execution, the training workflows systematically report detailed performance metrics and operational telemetry to the Ray distributed computing framework. The monitoring infrastructure captures and aggregates the following analytical dimensions:
+
+* **Training Progression Metrics**: Epoch-granular documentation of training loss convergence and classification accuracy evolution throughout the optimization process.
+* **Validation Performance Analytics**: Comprehensive evaluation metrics including validation loss and accuracy measurements, enabling robust model generalization assessment.
+* **Distributed Resource Utilization Telemetry**: Real-time monitoring of computational resource allocation including CPU utilization, memory consumption, and GPU acceleration metrics across all cluster nodes.
+* **Workflow Execution Metadata**: Systematic logging of job lifecycle events, execution timestamps, and operational status indicators for comprehensive audit trails.
+
+The aggregated metrics and telemetry data are accessible through the Ray Dashboard interface, available at `http://RAY_HEAD_NODE:8265`, and can be seamlessly integrated with external monitoring and observability platforms as operational requirements dictate.
